@@ -1,0 +1,365 @@
+#include "bmp3xx_barsotion.h"
+#include "bmp3xx_barsotion_regtypes.h"
+#include "bmp3xx_barsotion_wheels.h"
+
+#define _ROE(res)	do {\
+	if (res != 0)\
+	{\
+		return 1;\
+	}\
+} while(0);
+
+int bmp3xx_get_fatal_err_status(struct bmp3xx_desc *desc, bool *status)
+{
+	if (desc == NULL) return 1;
+	uint8_t err_reg = 1;
+	_ROE(bmp3xx_read_register(BMP3XX_ERR_REG, &err_reg, 1));
+	*status = (bool)err_reg.fatal_err;
+	return 0;
+}
+
+int bmp3xx_get_cmd_err_status(struct bmp3xx_desc *desc, bool *status)
+{
+	if (desc == NULL) return 1;
+	uint8_t err_reg = 1;
+	_ROE(bmp3xx_read_register(BMP3XX_ERR_REG, &err_reg, 1));
+	*status = (bool)err_reg.cmd_err;
+	return 0;
+}
+
+int bmp3xx_get_conf_err_status(struct bmp3xx_desc *desc, bool *status)
+{
+	if (desc == NULL) return 1;
+	uint8_t err_reg = 1;
+	_ROE(bmp3xx_read_register(BMP3XX_ERR_REG, &err_reg, 1));
+	*status = (bool)err_reg.conf_err;
+	return 0;
+}
+
+int bmp3xx_get_cmd_rdy_status(struct bmp3xx_desc *desc, bool *status)
+{
+	if (desc == NULL) return 1;
+	uint8_t status = 1;
+	_ROE(bmp3xx_read_register(BMP3XX_STATUS, &status, 1));
+	*status = (bool)status.cmd_rdy;
+	return 0;
+}
+
+int bmp3xx_get_drdy_press_status(struct bmp3xx_desc *desc, bool *status)
+{
+	if (desc == NULL) return 1;
+	uint8_t status = 1;
+	_ROE(bmp3xx_read_register(BMP3XX_STATUS, &status, 1));
+	*status = (bool)status.drdy_press;
+	return 0;
+}
+
+int bmp3xx_get_drdy_temp_status(struct bmp3xx_desc *desc, bool *status)
+{
+	if (desc == NULL) return 1;
+	uint8_t status = 1;
+	_ROE(bmp3xx_read_register(BMP3XX_STATUS, &status, 1));
+	*status = (bool)status.drdy_temp;
+	return 0;
+}
+
+int bmp3xx_get_por_detected_status(struct bmp3xx_desc *desc, bool *status)
+{
+	if (desc == NULL) return 1;
+	uint8_t event = 1;
+	_ROE(bmp3xx_read_register(BMP3XX_EVENT, &event, 1));
+	*status = (bool)event.por_detected;
+	return 0;
+}
+
+int bmp3xx_get_fifo_wm_status(struct bmp3xx_desc *desc, bool *status)
+{
+	if (desc == NULL) return 1;
+	uint8_t int_status = 1;
+	_ROE(bmp3xx_read_register(BMP3XX_INT_STATUS, &int_status, 1));
+	*status = (bool)int_status.fwm_int;
+	return 0;
+}
+
+int bmp3xx_get_fifo_full_status(struct bmp3xx_desc *desc, bool *status)
+{
+	if (desc == NULL) return 1;
+	uint8_t int_status = 1;
+	_ROE(bmp3xx_read_register(BMP3XX_INT_STATUS, &int_status, 1));
+	*status = (bool)int_status.ffull_int;
+	return 0;
+}
+
+int bmp3xx_get_drdy_status(struct bmp3xx_desc *desc, bool *status)
+{
+	if (desc == NULL) return 1;
+	uint8_t int_status = 1;
+	_ROE(bmp3xx_read_register(BMP3XX_INT_STATUS, &int_status, 1));
+	*status = (bool)int_status.drdy;
+	return 0;
+}
+
+int bmp3xx_set_fifo_config(struct bmp3xx_desc *desc, const struct bmp3xx_fifo_cfg *cfg)
+{
+	if (desc == NULL || cfg == NULL) return 1;
+	uint8_t fifo_config_1 = 1;
+	_ROE(bmp3xx_read_register(BMP3XX_FIFO_CONFIG_1, &fifo_config_1, 1));
+	fifo_config_1.stop_on_full = cfg->stop_on_full_en & 1;
+	fifo_config_1.time_en = cfg->time_en & 1;
+	fifo_config_1.press_en = cfg->press_en & 1;
+	fifo_config_1.temp_en = cfg->temp_en & 1;
+	_ROE(bmp3xx_write_register(BMP3XX_FIFO_CONFIG_1, &fifo_config_1, 1));
+	return 0;
+}
+
+int bmp3xx_get_fifo_config(struct bmp3xx_desc *desc, struct bmp3xx_fifo_cfg *cfg)
+{
+	if (desc == NULL || cfg == NULL) return 1;
+	uint8_t fifo_config_1 = 1;
+	_ROE(bmp3xx_read_register(BMP3XX_FIFO_CONFIG_1, &fifo_config_1, 1));
+	cfg->stop_on_full_en = fifo_config_1.stop_on_full;
+	cfg->time_en = fifo_config_1.time_en;
+	cfg->press_en = fifo_config_1.press_en;
+	cfg->temp_en = fifo_config_1.temp_en;
+	return 0;
+}
+
+int bmp3xx_set_fifo_subsampling(struct bmp3xx_desc *desc, uint8_t subsampling)
+{
+	if (desc == NULL) return 1;
+	uint8_t fifo_config_2 = 0;
+	_ROE(bmp3xx_read_register(BMP3XX_FIFO_CONFIG_2, &fifo_config_2, 1));
+	fifo_config_2.fifo_subsampling = subsampling & 0x7;
+	_ROE(bmp3xx_write_register(BMP3XX_FIFO_CONFIG_2, &fifo_config_2, 1));
+	return 0;
+}
+
+int bmp3xx_get_fifo_subsampling(struct bmp3xx_desc *desc, uint8_t *subsampling)
+{
+	if (desc == NULL) return 1;
+	uint8_t fifo_config_2 = 0;
+	_ROE(bmp3xx_read_register(BMP3XX_FIFO_CONFIG_2, &fifo_config_2, 1));
+	*subsampling = fifo_config_2.fifo_subsampling;
+	return 0;
+}
+
+
+
+
+
+
+
+int bmp3xx_init(struct BMP3XX_DESC *desc, uint8_t addr)
+{
+	if (desc == NULL) return 1;
+	desc->address_ = addr;
+	i2c_init(addr, sda, scl);
+	uint8_t data;
+	uint8_t res;
+	res = this->readRegister(BMP388_CHIP_ID, &data, 1);
+	if (res != 0) return res;
+	if (data != 0x50) return 1;
+	// Enable Thermometer & Barometer
+	data = 0x33;
+	this->writeRegister(BMP388_PWR_CTRL, &data, 1);
+	res = readCalibrationData();
+	if (res != 0) return res;
+	return 0;
+}
+
+uint8_t BMP388_t::getWhoAmI()
+{
+	uint8_t dummy;
+	this->readRegister(BMP388_CHIP_ID, &dummy, 1);
+	return dummy;
+}
+//==============================================================================
+uint8_t bmp3xx_set_temp_ovs(uint8_t value)
+{
+	value &= 0x7;
+	value <<= 3;
+	osr_reg &= 0b00000111;
+	osr_reg |= value;
+	return this->writeRegister(BMP388_OSR, &osr_reg, 1);
+}
+
+
+uint8_t BMP388_t::setPresOvs(uint8_t value)
+{
+	value &= 0b00000111; //защита от дурака
+	osr_reg &= 0b00111000;
+	osr_reg |= value;
+	return this->writeRegister(BMP388_OSR, &osr_reg, 1);
+}
+
+
+uint8_t BMP388_t::setIIRFilterCoef(uint8_t value)
+{
+	value &= 0b00000111; //защита от дурака
+	value <<= 1;
+	return this->writeRegister(BMP388_CONFIG, &value, 1);
+}
+
+
+uint8_t BMP388_t::setODR(uint8_t value)
+{
+	value &= 0b00011111; //защита от дурака
+	return this->writeRegister(BMP388_ODR, &value, 1);
+}
+
+
+//==============================================================================
+uint8_t BMP388_t::readCalibrationData()
+{
+	uint8_t data[21];
+	uint8_t res = this->readRegister(BMP388_T1_L, data, 21);
+	if (res != 0) return res;
+	_par.t1 = (float)(((uint16_t)data[1] << 8) | ((uint16_t)data[0]));
+	_par.t2 = (float)(((uint16_t)data[3] << 8) | ((uint16_t)data[2]));
+	_par.t3 = (float)((int8_t)data[4]);
+	_par.p1 = (float)(int16_t)(((int16_t)data[6] << 8) | ((int16_t)data[5]));
+	_par.p2 = (float)(int16_t)(((int16_t)data[8] << 8) | ((int16_t)data[7]));
+	_par.p3 = (float)((uint8_t)data[9]);
+	_par.p4 = (float)((int8_t)data[10]);
+	_par.p5 = (float)(((uint16_t)data[12] << 8) | ((uint16_t)data[11]));
+	_par.p6 = (float)(((uint16_t)data[14] << 8) | ((uint16_t)data[13]));
+	_par.p7 = (float)((int8_t)data[15]);
+	_par.p8 = (float)((int8_t)data[16]);
+	_par.p9 = (float)(int16_t)(((int16_t)data[18] << 8) | ((int16_t)data[17]));
+	_par.p10 = (float)((int8_t)data[19]);
+	_par.p11 = (float)((int8_t)data[20]);
+	//Serial.print("T1: ");
+	//Serial.println(_par.t1);
+	//Serial.print("T2: ");
+	//Serial.println(_par.t2);
+	//Serial.print("T3: ");
+	//Serial.println(_par.t3);
+	//Serial.print("P1: ");
+	//Serial.println(_par.p1);
+	//Serial.print("P2: ");
+	//Serial.println(_par.p2);
+	//Serial.print("P3: ");
+	//Serial.println(_par.p3);
+	//Serial.print("P4: ");
+	//Serial.println(_par.p4);
+	//Serial.print("P5: ");
+	//Serial.println(_par.p5);
+	//Serial.print("P6: ");
+	//Serial.println(_par.p6);
+	//Serial.print("P7: ");
+	//Serial.println(_par.p7);
+	//Serial.print("P8: ");
+	//Serial.println(_par.p8);
+	//Serial.print("P9: ");
+	//Serial.println(_par.p9);
+	//Serial.print("P10: ");
+	//Serial.println(_par.p10);
+	//Serial.print("P11: ");
+	//Serial.println(_par.p11);
+	_par.t1 = AdvancedShift(_par.t1, 8);
+	_par.t2 = AdvancedShift(_par.t2, -30);
+	_par.t3 = AdvancedShift(_par.t3, -48);
+	_par.p1 = AdvancedShift(_par.p1 - 16384.0, -20);
+	_par.p2 = AdvancedShift(_par.p2 - 16384.0, -29);
+	_par.p3 = AdvancedShift(_par.p3, -32);
+	_par.p4 = AdvancedShift(_par.p4, -37);
+	_par.p5 = AdvancedShift(_par.p5, 3);
+	_par.p6 = AdvancedShift(_par.p6, -6);
+	_par.p7 = AdvancedShift(_par.p7, -8);
+	_par.p8 = AdvancedShift(_par.p8, -15);
+	_par.p9 = AdvancedShift(_par.p9, -48);
+	_par.p10 = AdvancedShift(_par.p10, -48);
+	_par.p11 = AdvancedShift(_par.p11, -65);
+	return 0;
+}
+
+
+/* Функция AdvancedShift умножает float f на 2 в степени value */
+float BMP388_t::AdvancedShift(float f, uint8_t value)
+{
+	//avoid the zero exception
+	if (f == 0.0) return f;
+	uint8_t* u = (uint8_t*)&f;
+	//save the sign
+	uint8_t sign = u[3] & 0x80;
+	//extract the exp with the sign
+	uint16_t exponent = ((uint16_t)u[3]<<8)|((uint16_t)u[2]);
+	exponent += (uint16_t)value << 7;
+	//clear the sign bit
+	exponent &= 0x7FFF;
+	//native sign insertion
+	exponent |= (uint16_t)sign << 8;
+	//save modifications
+	u[2] = exponent & 0xFF;
+	u[3] = exponent >> 8;
+	return f;
+}
+
+
+//==============================================================================
+void BMP388_t::calcTemp(uint8_t *raw)
+{
+	uint32_t uncomp_temp = (uint32_t)raw[2]<<16 | (uint32_t)raw[1]<<8 | raw[0];
+	BMP388_compensate_temperature(uncomp_temp);
+}
+
+
+void BMP388_t::calcPres(uint8_t *raw)
+{
+	uint32_t uncomp_pres = (uint32_t)raw[2]<<16 | (uint32_t)raw[1]<<8 | raw[0];
+	BMP388_compensate_pressure(uncomp_pres);
+}
+
+
+void BMP388_t::calcAlt()
+{
+	this->altitude = 44330.0 * (1.0 - powf(this->pressure / _SEA_LEVEL, 0.1903));
+}
+
+
+void BMP388_t::calcAlt(float p0)
+{
+	this->altitude = 44330.0 * (1.0 - powf(this->pressure / p0, 0.1903));
+}
+
+
+//==============================================================================
+void BMP388_t::BMP388_compensate_temperature(uint32_t uncomp_temp)
+{
+	float data1;
+	float data2;
+	data1 = (float)(uncomp_temp - _par.t1);
+	data2 = (float)(data1 * _par.t2);
+	// Update the compensated temperature in calib structure since
+	// this is needed for pressure calculation
+	this->temperature = data2 + (data1 * data1) * _par.t3;
+}
+
+
+void BMP388_t::BMP388_compensate_pressure(uint32_t uncomp_press)
+{
+	// Temporary variables used for compensation
+	float data1;
+	float data2;
+	float data3;
+	float data4;
+	float out1;
+	float out2;
+	float T_lin2 = this->temperature * this->temperature;
+	float T_lin3 = T_lin2 * this->temperature;
+	float F_uncomp_press = (float)uncomp_press;
+	// Calibration data
+	data1 = _par.p6 * this->temperature;
+	data2 = _par.p7 * T_lin2;
+	data3 = _par.p8 * T_lin3;
+	out1 = _par.p5 + data1 + data2 + data3;
+	data1 = _par.p2 * this->temperature;
+	data2 = _par.p3 * T_lin2;
+	data3 = _par.p4 * T_lin3;
+	out2 = F_uncomp_press * (_par.p1 + data1 + data2 + data3);
+	data1 = F_uncomp_press * F_uncomp_press;
+	data2 = _par.p9 + _par.p10 * this->temperature;
+	data3 = data1 * data2;
+	data4 = data3 + (data1 * F_uncomp_press) * _par.p11;
+	this->pressure = out1 + out2 + data4;
+}
