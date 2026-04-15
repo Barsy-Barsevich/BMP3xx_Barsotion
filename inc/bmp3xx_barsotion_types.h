@@ -14,7 +14,44 @@ typedef struct bmp3xx_fifo_cfg
 	uint8_t temp_en;
 } _bmp3xx_barsotion_fifo_cfg_t;
 
-typedef struct BMP3XX_DESC
+typedef struct bmp3xx_int_cfg
+{
+	enum BMP3XX_INT_O drive;
+	enum BMP3XX_INT_LVL level;
+	bool latch_en;
+	bool fwtm_en;
+	bool ffull_en;
+	bool drdy_en;
+} _bmo3xx_barsotion_int_cfg_t;
+
+typedef struct bmp3xx_cfg
+{
+	struct bmp3xx_fifo_cfg fifo;
+	struct bmp3xx_int_cfg interrupt;
+	struct
+	{
+		bool en;
+		enum BMP3XX_OVS ovs;
+	} press;
+	struct
+	{
+		bool en;
+		enum BMP3XX_OVS ovs;
+	} temp;
+	struct
+	{
+		bool en;
+		enum BMP3XX_IIR_FILT_COEF coef;
+	} iir_filt;
+	struct
+	{
+		bool en;
+		enum BMP3XX_I2C_WDT timeout;
+	} i2c_wdt;
+	enum BMP3XX_SPI_MODE spi_mode;
+} _bmp3xx_barsotion_cfg_t;
+
+typedef struct bmp3xx_desc
 {
 	struct
 	{
@@ -23,23 +60,6 @@ typedef struct BMP3XX_DESC
 	} _par;
 	uint8_t address;
 } _bmp3xx_barsotion_desc_t;
-
-
-private:
-    uint8_t _address_;
-    struct
-    {
-        float t1, t2, t3;
-        float p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11;
-    } _par;
-    uint8_t osr_reg;
-    bool temp_flag;
-    bool press_flag;
-    uint32_t raw[2];
-public:
-    float temperature, pressure, altitude;
-    uint8_t (*readRegister)(uint8_t reg, uint8_t *buf, uint8_t size);
-    uint8_t (*writeRegister)(uint8_t reg, uint8_t *buf, uint8_t size);
 
 #if defined(__cplusplus)
 }

@@ -1,5 +1,37 @@
 #pragma once
 
+typedef enum BMP3XX_DATA
+{
+	BMP3XX_DATA_UNFILTERED = 0,
+	BMP3XX_DATA_FILTERED = 1,
+	_BMP3XX_DATA_RES1,
+	_BMP3XX_DATA_RES2,
+} _bmp3xx_barsotion_data_t;
+
+typedef enum BMP3XX_INT_O
+{
+	BMP3XX_INT_O_PP = 0,
+	BMP3XX_INT_O_OD,
+} _bmp3xx_barsotion_int_output_t;
+
+typedef enum BMP3XX_INT_LVL
+{
+	BMP3XX_INT_LVL_ACTIVE_LOW = 0,
+	BMP3XX_INT_LVL_ACTIVE_HIGH,
+} _bmp3xx_barsotion_int_level_t;
+
+typedef enum BMP3XX_SPI_MODE
+{
+	BMP3XX_SPI_MODE_SPI4 = 0,
+	BMP3XX_SPI_MODE_SPI3,
+} _bmp3xx_barsotion_spi_mode_t;
+
+typedef enum BMP3XX_I2C_WDT
+{
+	BMP3XX_I2C_WDT_1P25MS = 0,
+	BMP3XX_I2C_WDT_40MS,
+} _bmp3xx_barsotion_i2c_wdt_t;
+
 typedef enum BMP3XX_MODE
 {
 	BMP3XX_MODE_SLEEP = 0,

@@ -51,15 +51,15 @@ typedef struct FIFO_CONFIG_1
 typedef struct FIFO_CONFIG_2
 {
 	uint8_t fifo_subsampling:3;
-	uint8_t data_select:2;
+	enum BMP3XX_DATA data_select:2;
 	uint8_t __dummy:3;
 } _bmp3xx_barsotion_fifo_config_2_t;
 
 typedef struct INT_CTRL
 {
-	uint8_t int_od:1;
-	uint8_t int_level:1;
-	uint8_t int_latch:1;
+	enum BMP3XX_INT_O int_od:1;
+	enum BMP3XX_INT_LVL int_level:1;
+	uint8_t int_latch_en:1;
 	uint8_t fwtm_en:1;
 	uint8_t ffull_en:1;
 	uint8_t __dummy1:1;
@@ -69,9 +69,9 @@ typedef struct INT_CTRL
 
 typedef struct IF_CONF
 {
-	uint8_t spi3:1;
+	enum BMP3XX_SPI_MODE spi_mode:1;
 	uint8_t i2c_wdt_en:1;
-	uint8_t i2c_wdt_sel:1;
+	enum BMP3XX_I2C_WDT i2c_wdt_sel:1;
 	uint8_t __dummy:5;
 } _bmp3xx_barsotion_if_conf_t;
 
