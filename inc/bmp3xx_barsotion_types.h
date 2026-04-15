@@ -59,6 +59,10 @@ typedef struct bmp3xx_desc
         float p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11;
 	} _par;
 	uint8_t address;
+	uint32_t uncomp_press;
+	uint32_t uncomp_temp;
+	float press;
+	float temp;
 } _bmp3xx_barsotion_desc_t;
 
 #if defined(__cplusplus)
