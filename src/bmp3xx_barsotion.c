@@ -684,6 +684,30 @@ int bmp3xx_init(struct bmp3xx_desc *desc, const struct bmp3xx_cfg *cfg)
 	}
 	_ROE(bmp3xx_set_fifo_config(desc, &cfg->fifo));
 	_ROE(bmp3xx_set_int_config(desc, &cfg->interrupt));
+	_ROE(bmp3xx_set_temp_en(desc, cfg->temp.en));
+	if (cfg->temp.en)
+	{
+		_ROE(bmp3xx_set_temp_ovs(desc, cfg->temp.ovs));
+	}
+	_ROE(bmp3xx_set_press_en(desc, cfg->press.en));
+	if (cfg->press_en)
+	{
+		_ROE(bmp3xx_set_press_ovs(desc, cfg->press.ovs));
+	}
+	if (cfg->iir_filt.en)
+	{
+		_ROE(bmp3xx_set_data_select(desc, BMP3XX_DATA_FILTERED));
+		_ROE(bmp3xx_set_iir_filt_coef(desc, cfg->iir_filt.coef));
+	}
+	else
+	{
+		_ROE(bmp3xx_set_data_select(desc, BMP3XX_DATA_UNFILTERED));
+	}
+	_ROE(bmp3xx_set_i2c_wdt_en(desc, cfg->i2c_wdt.en));
+	if (cfg->i2c_wdt.en)
+	{
+		_ROE(bmp3xx_set_i2c_wdt_timeout(desc, cfg->i2c_wdt.timeout));
+	}
 	return 0;
 }
 
