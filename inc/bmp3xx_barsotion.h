@@ -4,6 +4,9 @@
 extern "C" {
 #endif
 
+#include <stddef.h>
+
+#include "bmp3xx_barsotion_regconst.h"
 #include "bmp3xx_barsotion_regmap.h"
 #include "bmp3xx_barsotion_const.h"
 #include "bmp3xx_barsotion_types.h"
@@ -24,7 +27,7 @@ int bmp3xx_get_fifo_config(struct bmp3xx_desc *desc, struct bmp3xx_fifo_cfg *cfg
 int bmp3xx_set_fifo_subsampling(struct bmp3xx_desc *desc, uint8_t subsampling);
 int bmp3xx_get_fifo_subsampling(struct bmp3xx_desc *desc, uint8_t *subsampling);
 int bmp3xx_set_data_select(struct bmp3xx_desc *desc, enum BMP3XX_DATA data_sel);
-int bmp3xx_set_data_select(struct bmp3xx_desc *desc, enum BMP3XX_DATA *data_sel);
+int bmp3xx_get_data_select(struct bmp3xx_desc *desc, enum BMP3XX_DATA *data_sel);
 int bmp3xx_set_int_output_drive(struct bmp3xx_desc *desc, enum BMP3XX_INT_O od);
 int bmp3xx_get_int_output_drive(struct bmp3xx_desc *desc, enum BMP3XX_INT_O *od);
 int bmp3xx_set_int_level(struct bmp3xx_desc *desc, enum BMP3XX_INT_LVL lvl);
@@ -46,11 +49,11 @@ int bmp3xx_get_i2c_wdt_en(struct bmp3xx_desc *desc, bool *en);
 int bmp3xx_set_i2c_wdt_timeout(struct bmp3xx_desc *desc, enum BMP3XX_I2C_WDT timeout);
 int bmp3xx_get_i2c_wdt_timeout(struct bmp3xx_desc *desc, enum BMP3XX_I2C_WDT *timeout);
 int bmp3xx_set_press_en(struct bmp3xx_desc *desc, bool en);
-int bmp3xx_set_press_en(struct bmp3xx_desc *desc, bool en);
+int bmp3xx_get_press_en(struct bmp3xx_desc *desc, bool *en);
 int bmp3xx_set_temp_en(struct bmp3xx_desc *desc, bool en);
-int bmp3xx_set_temp_en(struct bmp3xx_desc *desc, bool en);
-int bmp3xx_set_press_en(struct bmp3xx_desc *desc, enum BMP3XX_MODE mode);
-int bmp3xx_set_press_en(struct bmp3xx_desc *desc, enum BMP3XX_MODE *mode);
+int bmp3xx_get_temp_en(struct bmp3xx_desc *desc, bool *en);
+int bmp3xx_set_mode(struct bmp3xx_desc *desc, enum BMP3XX_MODE mode);
+int bmp3xx_get_mode(struct bmp3xx_desc *desc, enum BMP3XX_MODE *mode);
 int bmp3xx_set_press_ovs(struct bmp3xx_desc *desc, enum BMP3XX_OVS ovs);
 int bmp3xx_get_press_ovs(struct bmp3xx_desc *desc, enum BMP3XX_OVS *ovs);
 int bmp3xx_set_temp_ovs(struct bmp3xx_desc *desc, enum BMP3XX_OVS ovs);

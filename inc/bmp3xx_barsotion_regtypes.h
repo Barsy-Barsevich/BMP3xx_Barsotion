@@ -86,8 +86,8 @@ typedef struct PWR_CTRL
 
 typedef struct OSR
 {
-	enum BMP3XX_OSR osr_p:3;
-	enum BMP3XX_OSR osr_t:3;
+	enum BMP3XX_OVS ovs_p:3;
+	enum BMP3XX_OVS ovs_t:3;
 	uint8_t __dummy:2;
 } _bmp3xx_barsotion_osr_t;
 

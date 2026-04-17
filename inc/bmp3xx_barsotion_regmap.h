@@ -1,61 +1,64 @@
 #pragma once
 
 //Main register map
-#define BMP3XX_CHIP_ID          0x00
-#define BMP3XX_ERR_REG          0x02
-#define BMP3XX_STATUS           0x03
-#define BMP3XX_DATA_0           0x04
-#define BMP3XX_DATA_1           0x05
-#define BMP3XX_DATA_2           0x06
-#define BMP3XX_DATA_3           0x07
-#define BMP3XX_DATA_4           0x08
-#define BMP3XX_DATA_5           0x09
-#define BMP3XX_PRESS_XLSB       0x04
-#define BMP3XX_PRESS_LSB        0x05
-#define BMP3XX_PRESS_MSB        0x06
-#define BMP3XX_TEMP_XLSB        0x07
-#define BMP3XX_TEMP_LSB         0x08
-#define BMP3XX_TEMP_MSB         0x09
-#define BMP3XX_SENSORTIME_0     0x0C
-#define BMP3XX_SENSORTIME_1     0x0D
-#define BMP3XX_SENSORTIME_2     0x0E
-#define BMP3XX_SENSORTIME_3     0x0F
-#define BMP3XX_EVENT            0x10
-#define BMP3XX_INT_STATUS       0x11
-#define BMP3XX_FIFO_LENGTH_0    0x12
-#define BMP3XX_FIFO_LENGTH_1    0x13
-#define BMP3XX_FIFO_DATA        0x14
-#define BMP3XX_FIFO_WTM_0       0x15
-#define BMP3XX_FIFO_WTM_1       0x16
-#define BMP3XX_FIFO_CONFIG_1    0x17
-#define BMP3XX_FIFO_CONFIG_2    0x18
-#define BMP3XX_INT_CTRL         0x19
-#define BMP3XX_IF_CONF          0x1A
-#define BMP3XX_PWR_CTRL         0x1B
-#define BMP3XX_OSR              0x1C
-#define BMP3XX_ODR              0x1D
-#define BMP3XX_CONFIG           0x1F
-#define BMP3XX_CMD              0x7E
-//Trimming coefficients
-#define BMP3XX_T1_L             0x31
-#define BMP3XX_T1_H             0x32
-#define BMP3XX_T2_L             0x33
-#define BMP3XX_T2_H             0x34
-#define BMP3XX_T3               0x35
-#define BMP3XX_P1_L             0x36
-#define BMP3XX_P1_H             0x37
-#define BMP3XX_P2_L             0x38
-#define BMP3XX_P2_H             0x39
-#define BMP3XX_P3               0x3A
-#define BMP3XX_P4               0x3B
-#define BMP3XX_P5_L             0x3C
-#define BMP3XX_P5_H             0x3D
-#define BMP3XX_P6_L             0x3E
-#define BMP3XX_P6_H             0x3F
-#define BMP3XX_P7               0x40
-#define BMP3XX_P8               0x41
-#define BMP3XX_P9_L             0x42
-#define BMP3XX_P9_H             0x43
-#define BMP3XX_P10              0x44
-#define BMP3XX_P11              0x45
+enum BMP3XX_REGMAP
+{
+	BMP3XX_CHIP_ID        = 0x00,
+	BMP3XX_ERR_REG        = 0x02,
+	BMP3XX_STATUS         = 0x03,
+	BMP3XX_DATA_0         = 0x04,
+	BMP3XX_DATA_1         = 0x05,
+	BMP3XX_DATA_2         = 0x06,
+	BMP3XX_DATA_3         = 0x07,
+	BMP3XX_DATA_4         = 0x08,
+	BMP3XX_DATA_5         = 0x09,
+	BMP3XX_PRESS_XLSB     = 0x04,
+	BMP3XX_PRESS_LSB      = 0x05,
+	BMP3XX_PRESS_MSB      = 0x06,
+	BMP3XX_TEMP_XLSB      = 0x07,
+	BMP3XX_TEMP_LSB       = 0x08,
+	BMP3XX_TEMP_MSB       = 0x09,
+	BMP3XX_SENSORTIME_0   = 0x0C,
+	BMP3XX_SENSORTIME_1   = 0x0D,
+	BMP3XX_SENSORTIME_2   = 0x0E,
+	BMP3XX_SENSORTIME_3   = 0x0F,
+	BMP3XX_EVENT          = 0x10,
+	BMP3XX_INT_STATUS     = 0x11,
+	BMP3XX_FIFO_LENGTH_0  = 0x12,
+	BMP3XX_FIFO_LENGTH_1  = 0x13,
+	BMP3XX_FIFO_DATA      = 0x14,
+	BMP3XX_FIFO_WTM_0     = 0x15,
+	BMP3XX_FIFO_WTM_1     = 0x16,
+	BMP3XX_FIFO_CONFIG_1  = 0x17,
+	BMP3XX_FIFO_CONFIG_2  = 0x18,
+	BMP3XX_INT_CTRL       = 0x19,
+	BMP3XX_IF_CONF        = 0x1A,
+	BMP3XX_PWR_CTRL       = 0x1B,
+	BMP3XX_OSR            = 0x1C,
+	BMP3XX_ODR            = 0x1D,
+	BMP3XX_CONFIG         = 0x1F,
+	BMP3XX_CMD            = 0x7E,
+//Trimming coefficient
+	BMP3XX_T1_L           = 0x31,
+	BMP3XX_T1_H           = 0x32,
+	BMP3XX_T2_L           = 0x33,
+	BMP3XX_T2_H           = 0x34,
+	BMP3XX_T3             = 0x35,
+	BMP3XX_P1_L           = 0x36,
+	BMP3XX_P1_H           = 0x37,
+	BMP3XX_P2_L           = 0x38,
+	BMP3XX_P2_H           = 0x39,
+	BMP3XX_P3             = 0x3A,
+	BMP3XX_P4             = 0x3B,
+	BMP3XX_P5_L           = 0x3C,
+	BMP3XX_P5_H           = 0x3D,
+	BMP3XX_P6_L           = 0x3E,
+	BMP3XX_P6_H           = 0x3F,
+	BMP3XX_P7             = 0x40,
+	BMP3XX_P8             = 0x41,
+	BMP3XX_P9_L           = 0x42,
+	BMP3XX_P9_H           = 0x43,
+	BMP3XX_P10            = 0x44,
+	BMP3XX_P11            = 0x45,
+};
 
