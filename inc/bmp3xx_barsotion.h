@@ -5,6 +5,7 @@ extern "C" {
 #endif
 
 #include <stddef.h>
+#include <math.h>
 
 #include "bmp3xx_barsotion_regconst.h"
 #include "bmp3xx_barsotion_regmap.h"

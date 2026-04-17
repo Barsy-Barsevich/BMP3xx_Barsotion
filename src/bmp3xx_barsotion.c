@@ -9,29 +9,6 @@
 	}\
 } while(0);
 
-/* return == f * 2^value */
-static float _advanced_shift(float f, uint8_t value)
-{
-	//avoid the zero exception
-	if (f == 0.0) return f;
-	
-	uint8_t* u = (uint8_t*)&f;
-	if (u[0] == )
-	//save the sign
-	uint8_t sign = u[3] & 0x80;
-	//extract the exp with the sign
-	uint16_t exponent = ((uint16_t)u[3]<<8)|((uint16_t)u[2]);
-	exponent += (uint16_t)value << 7;
-	//clear the sign bit
-	exponent &= 0x7FFF;
-	//native sign insertion
-	exponent |= (uint16_t)sign << 8;
-	//save modifications
-	u[2] = exponent & 0xFF;
-	u[3] = exponent >> 8;
-	return f;
-}
-
 static int _read_calibration_data(struct bmp3xx_desc *desc)
 {
 	uint8_t data[21];
@@ -50,20 +27,20 @@ static int _read_calibration_data(struct bmp3xx_desc *desc)
 	desc->_par.p9 = (float)(int16_t)(((int16_t)data[18] << 8) | ((int16_t)data[17]));
 	desc->_par.p10 = (float)((int8_t)data[19]);
 	desc->_par.p11 = (float)((int8_t)data[20]);
-	desc->_par.t1 = _advanced_shift(desc->_par.t1, 8);
-	desc->_par.t2 = _advanced_shift(desc->_par.t2, -30);
-	desc->_par.t3 = _advanced_shift(desc->_par.t3, -48);
-	desc->_par.p1 = _advanced_shift(desc->_par.p1 - 16384.0, -20);
-	desc->_par.p2 = _advanced_shift(desc->_par.p2 - 16384.0, -29);
-	desc->_par.p3 = _advanced_shift(desc->_par.p3, -32);
-	desc->_par.p4 = _advanced_shift(desc->_par.p4, -37);
-	desc->_par.p5 = _advanced_shift(desc->_par.p5, 3);
-	desc->_par.p6 = _advanced_shift(desc->_par.p6, -6);
-	desc->_par.p7 = _advanced_shift(desc->_par.p7, -8);
-	desc->_par.p8 = _advanced_shift(desc->_par.p8, -15);
-	desc->_par.p9 = _advanced_shift(desc->_par.p9, -48);
-	desc->_par.p10 = _advanced_shift(desc->_par.p10, -48);
-	desc->_par.p11 = _advanced_shift(desc->_par.p11, -65);
+	desc->_par.t1 = desc->_par.t1 * powf(2, 8);
+	desc->_par.t2 = desc->_par.t2 * powf(2, -30);
+	desc->_par.t3 = desc->_par.t3 * powf(2, -48);
+	desc->_par.p1 = (desc->_par.p1 - 16384.0) * powf(2, -20);
+	desc->_par.p2 = (desc->_par.p2 - 16384.0) * powf(2, -29);
+	desc->_par.p3 = desc->_par.p3 * powf(2, -32);
+	desc->_par.p4 = desc->_par.p4 * powf(2, -37);
+	desc->_par.p5 = desc->_par.p5 * powf(2, 3);
+	desc->_par.p6 = desc->_par.p6 * powf(2, -6);
+	desc->_par.p7 = desc->_par.p7 * powf(2, -8);
+	desc->_par.p8 = desc->_par.p8 * powf(2, -15);
+	desc->_par.p9 = desc->_par.p9 * powf(2, -48);
+	desc->_par.p10 = desc->_par.p10 * powf(2, -48);
+	desc->_par.p11 = desc->_par.p11 * powf(2, -65);
 	return 0;
 }
 
